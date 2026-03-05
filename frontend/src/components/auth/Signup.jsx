@@ -52,11 +52,11 @@ const Signup = () => {
 			});
 			if (res.data.success) {
 				navigate("/login");
-				toast.success(res.data.message);
+				toast.success(res.data?.message);
 			}
 		} catch (error) {
 			console.log(error);
-			toast.error(error.response.data.message);
+			toast.error(error?.response?.data?.message);
 		} finally {
 			dispatch(setLoading(false));
 		}

@@ -21,7 +21,7 @@ app.use(cookieParser());
 
 // CORS
 const corsOptions = {
-	origin: process.env.FRONTEND_URL || "http://localhost:5173",
+	origin: process.env.FRONTEND_URL || "https://jobmatrix-x85c.onrender.com",
 	credentials: true,
 };
 

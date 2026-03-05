@@ -7,34 +7,49 @@ import userRoute from "./routes/user.route.js";
 import companyRoute from "./routes/company.route.js";
 import jobRoute from "./routes/job.route.js";
 import applicationRoute from "./routes/application.route.js";
+import path from "path";
 
-dotenv.config({});
+dotenv.config();
 
 const app = express();
+const __dirname = path.resolve();
 
 // middleware
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+// CORS
 const corsOptions = {
-    origin:'http://localhost:5173',
-    credentials:true
-}
+	origin: process.env.FRONTEND_URL || "http://localhost:5173",
+	credentials: true,
+};
 
 app.use(cors(corsOptions));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 
-
-// api's
+// API routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/company", companyRoute);
 app.use("/api/v1/job", jobRoute);
 app.use("/api/v1/application", applicationRoute);
 
 
+// ===============================
+// Serve Frontend (Production)
+// ===============================
 
-app.listen(PORT,()=>{
-    connectDB();
-    console.log(`Server running at port ${PORT}`);
-})
+app.use(express.static(path.join(__dirname, "frontend", "dist")));
+
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+});
+
+
+// ===============================
+
+app.listen(PORT, async () => {
+	await connectDB();
+	console.log(`Server running on port ${PORT}`);
+});
